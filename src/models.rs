@@ -1,4 +1,4 @@
-use serde::{Deserialize, Serialize, Deserializer};
+use serde::{Deserialize, Deserializer};
 use chrono::{DateTime, NaiveDate, Utc};
 
 const DATE_FORMAT: &str = "%Y-%m-%d";
