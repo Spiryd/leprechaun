@@ -1,11 +1,9 @@
 use crate::models::EodOhlcv;
 
 pub mod vantage_alpha;
-pub mod xtb_api;
 
 pub enum Api {
     VantageAlpha(vantage_alpha::VantageAlpha),
-    XtbApi(xtb_api::XtbApi),
 }
 
 impl Api {
@@ -13,14 +11,13 @@ impl Api {
         Api::VantageAlpha(vantage_alpha::VantageAlpha::new(api_key))
     }
 
-    pub async fn get_daily(&self, symbol: &str) -> Result<Vec<EodOhlcv>, Box<dyn std::error::Error>> {
+    pub async fn get_eod(&self, symbol: &str) -> Result<Vec<EodOhlcv>, Box<dyn std::error::Error>> {
         match self {
-            Api::VantageAlpha(api) => api.get_daily(symbol).await,
-            Api::XtbApi(api) => api.get_daily(symbol).await,
+            Api::VantageAlpha(api) => api.get_eod(symbol).await,
         }
     }
 }
 
 pub trait ApiGetters {
-    async fn get_daily(&self, symbol: &str) -> Result<Vec<EodOhlcv>, Box<dyn std::error::Error>>;
+    async fn get_eod(&self, symbol: &str) -> Result<Vec<EodOhlcv>, Box<dyn std::error::Error>>;
 }

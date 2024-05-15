@@ -5,23 +5,19 @@ mod apis;
 mod data_manager;
 
 use apis::*;
-use sqlx::postgres::PgPoolOptions;
+use chrono::Local;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("WELCOME TO LEPRECHAUN");
     dotenvy::dotenv().expect(".env file not found");
     let vantage_alpha_key = env::var("VANTAGE_ALPHA_KEY").expect("VANTAGE_ALPHA_KEY not found in .env file");
-    println!("VANTAGE_ALPHA_KEY: {:?}", vantage_alpha_key);
+    let postgres_url = env::var("DATABASE_URL").expect("DATABASE_URL not found in .env file");
 
-    let api = apis::vantage_alpha::VantageAlpha::new(vantage_alpha_key);
-    let ohlcv = api.get_daily("IBM").await?;
-    println!("{:?}", ohlcv);
+    let api = Api::new_vantage_alpha(vantage_alpha_key);
 
-    let pool = PgPoolOptions::new()
-        .max_connections(5)
-        .connect(&env::var("DATABASE_URL")?)
-        .await?;
-
+    let data_manager = data_manager::DataManager::new(api, &postgres_url).await;
+    let data = data_manager.get_eod_data("GOOGL", None, Some(Local::now().date_naive())).await?;
+    println!("{:?}", data);
     Ok(())
 }

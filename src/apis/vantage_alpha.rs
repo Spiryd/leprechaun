@@ -12,7 +12,7 @@ impl VantageAlpha {
 }
 
 impl ApiGetters for VantageAlpha {
-    async fn get_daily(&self, symbol: &str) -> Result<Vec<EodOhlcv>, Box<dyn std::error::Error>> {
+    async fn get_eod(&self, symbol: &str) -> Result<Vec<EodOhlcv>, Box<dyn std::error::Error>> {
         let client = reqwest::Client::new();
         let rsp = client.get("https://www.alphavantage.co/query?").query(&[("function", "TIME_SERIES_DAILY"), ("symbol", symbol), ("outputsize", "full"), ("apikey", &self.api_key),("datatype", "csv")]).send().await?;
         let body = rsp.text().await?;

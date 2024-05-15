@@ -8,12 +8,12 @@ const DATE_FORMAT: &str = "%Y-%m-%d";
 pub struct EodOhlcv {
     #[serde(rename = "timestamp")]
     #[serde(deserialize_with = "date_string_to_navie_date")]
-    time_stamp: NaiveDate,
-    open: f64,
-    high: f64,
-    low: f64,
-    close: f64,
-    volume: u64,
+    pub date_stamp: NaiveDate,
+    pub open: f64,
+    pub high: f64,
+    pub low: f64,
+    pub close: f64,
+    pub volume: u64,
 }
 
 pub fn date_string_to_navie_date<'de, D>(deserializer: D) -> Result<NaiveDate, D::Error>
@@ -24,13 +24,10 @@ where
     Ok(NaiveDate::parse_from_str(&s, DATE_FORMAT).unwrap())
 }
 
-#[derive(sqlx::FromRow)]
-pub struct EOD {
-    ticker: String,
-    open: f64,
-    high: f64,
-    low: f64,
-    close: f64,
-    volume: u64,
-    time_stamp: NaiveDate,
-}
+
+#[derive(sqlx::FromRow, Debug)]
+pub struct EodCacheRegistery { pub ticker: String, pub end_date: NaiveDate, pub start_date: NaiveDate}
+
+#[derive(sqlx::FromRow, Debug)]
+pub struct Eod {pub ticker: String,  pub open: f64, pub high: f64, pub low: f64, pub close: f64, pub volume: i64, pub date_stamp: NaiveDate}
+
