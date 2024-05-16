@@ -1,5 +1,5 @@
-use serde::{Deserialize, Deserializer};
 use chrono::NaiveDate;
+use serde::{Deserialize, Deserializer};
 
 const DATE_FORMAT: &str = "%Y-%m-%d";
 
@@ -24,10 +24,20 @@ where
     Ok(NaiveDate::parse_from_str(&s, DATE_FORMAT).unwrap())
 }
 
+#[derive(sqlx::FromRow, Debug)]
+pub struct EodCacheRegistery {
+    pub ticker: String,
+    pub end_date: NaiveDate,
+    pub start_date: NaiveDate,
+}
 
 #[derive(sqlx::FromRow, Debug)]
-pub struct EodCacheRegistery { pub ticker: String, pub end_date: NaiveDate, pub start_date: NaiveDate}
-
-#[derive(sqlx::FromRow, Debug)]
-pub struct Eod {pub ticker: String,  pub open: f64, pub high: f64, pub low: f64, pub close: f64, pub volume: i64, pub date_stamp: NaiveDate}
-
+pub struct Eod {
+    pub ticker: String,
+    pub open: f64,
+    pub high: f64,
+    pub low: f64,
+    pub close: f64,
+    pub volume: i64,
+    pub date_stamp: NaiveDate,
+}

@@ -5,7 +5,6 @@ mod apis;
 mod data_manager;
 
 use apis::*;
-use chrono::Local;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -17,7 +16,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let api = Api::new_vantage_alpha(vantage_alpha_key);
 
     let data_manager = data_manager::DataManager::new(api, &postgres_url).await;
-    let data = data_manager.get_eod_data("GOOGL", None, Some(Local::now().date_naive())).await?;
-    println!("{:?}", data);
+    let _ = data_manager.get_eod_data("IBM", None, None).await?;
     Ok(())
 }
